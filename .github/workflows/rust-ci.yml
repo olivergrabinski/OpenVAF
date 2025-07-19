@@ -83,7 +83,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: binary-ubuntu-x86_64
-        path: target/release/OpenVAF
+        path: target/release/OpenVAF_reloaded
 
   # msys2-build-test:
   #   strategy:
@@ -151,7 +151,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: binary-macos-${{ matrix.arch }}
-        path: target/release/OpenVAF
+        path: target/release/OpenVAF_reloaded # ⚠️ RENAME THIS
 
   publish-release:
     name: Create GitHub Release
