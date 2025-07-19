@@ -2,7 +2,7 @@ use crate::spec::{LinkerFlavor, Target, TargetOptions};
 
 pub fn target() -> Target {
     let mut base = super::apple_base::opts();
-    base.cpu = "apple-a14".to_string();
+    base.cpu = "apple-m1".to_string();
 
     base.pre_link_args.insert(
         LinkerFlavor::Ld64,
@@ -11,6 +11,7 @@ pub fn target() -> Target {
             "arm64".to_string(),
             "-undefined".to_string(),
             "dynamic_lookup".to_string(),
+            "-lSystem".to_string(),
         ],
     );
 

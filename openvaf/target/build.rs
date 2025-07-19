@@ -36,7 +36,7 @@ fn gen_msvcrt_importlib(sh: &Shell, arch: &str, target: &str, check: bool) {
     let ucrt_obj = out_dir.join(format!("ucrt_{arch}.obj"));
     cmd!(
         sh,
-        "clang-cl /c /Zl /GS- /clang:--target={target}-pc-windows-msvc /clang:-o{ucrt_obj} {ucrt_src}"
+        "clang-cl /c /Zl /GS- /clang:--target={target}-pc-windows-msvc /clang:-o{ucrt_obj} -- {ucrt_src}"
     )
     .run()
     .expect("ucrt compilation succeeds");
