@@ -33,7 +33,7 @@ jobs:
 
   ubuntu-build-test:
     runs-on: ubuntu-latest
-    needs: [format, machete]
+    needs: [machete]
     steps:
     - uses: actions/checkout@v4
     - name: Install LLVM 15 and Windows cross-compilation tools
