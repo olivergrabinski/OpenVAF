@@ -76,7 +76,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y build-essential
     - name: Build
-      run: cargo build --release
+      run: cargo build --release --bin openvaf-r
     - name: List build files
       run: ls -R target/release
     - name: Run tests
@@ -85,7 +85,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: binary-ubuntu-x86_64
-        path: target/release/OpenVAF_reloaded
+        path: target/release/openvaf-r
 
   # msys2-build-test:
   #   strategy:
@@ -146,14 +146,14 @@ jobs:
       run: |
         echo "RUSTC_WRAPPER=$(which sccache)" >> $GITHUB_ENV
     - name: Build
-      run: cargo build --release
+      run: cargo build --release --bin openvaf-r
     - name: Run tests
       run: cargo test --release
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         name: binary-macos-${{ matrix.arch }}
-        path: target/release/OpenVAF_reloaded # ⚠️ RENAME THIS
+        path: target/release/openvaf-r
 
   publish-release:
     name: Create GitHub Release
