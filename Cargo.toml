@@ -1,3 +1,5 @@
+[package]
+name = "OpenVAF"
 
 [workspace]
 resolver = "2"
