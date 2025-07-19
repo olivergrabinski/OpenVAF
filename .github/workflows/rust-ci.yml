@@ -131,9 +131,9 @@ jobs:
       matrix:
         include:
           - arch: arm64
-            macos: 15
-          # - arch: x86_64
-            # macos: 13
+            macos: 13
+          - arch: x86_64
+            macos: 13
     runs-on: macos-${{ matrix.macos }}
     steps:
     - name: Checkout
