@@ -146,7 +146,7 @@ fn get_linker<'a>(
                 as Box<dyn Linker>
         }
         LinkerFlavor::Ld64 => {
-            Box::new(LdLinker { cmd: Command::new(path.unwrap_or_else(|| "ld".into())), target })
+            Box::new(LdLinker { cmd: Command::new(path.unwrap_or_else(|| "clang".into())), target })
                 as Box<dyn Linker>
         }
     }

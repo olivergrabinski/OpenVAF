@@ -4,8 +4,6 @@ pub fn target() -> Target {
     let mut base = super::apple_base::opts();
     base.cpu = "apple-m1".to_string();
 
-    let sdk_path = "/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk";
-
     base.pre_link_args.insert(
         LinkerFlavor::Ld64,
         vec![
@@ -13,9 +11,6 @@ pub fn target() -> Target {
             "arm64".to_string(),
             "-undefined".to_string(),
             "dynamic_lookup".to_string(),
-            "-lSystem".to_string(),
-            "-syslibroot".to_string(),
-            sdk_path.to_string(),
         ],
     );
 
