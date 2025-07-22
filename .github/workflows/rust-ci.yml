@@ -9,6 +9,45 @@ on:
       - '**'
 
 jobs:
+
+  msys2-build-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        sys: [MINGW64, UCRT64]
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{ matrix.sys }}
+        update: true
+        install: base-devel git ca-certificates
+        pacboy: >-
+          openssl:p
+          clang:p
+          llvm:p
+          rust:p
+          cc:p
+          python:p
+
+    - name: Configure Cargo to use CLI Git
+      shell: bash
+      run: |
+        mkdir -p .cargo
+        echo '[net]' > .cargo/config.toml
+        echo 'git-fetch-with-cli = true' >> .cargo/config.toml
+
+    - name: Run cargo
+      shell: msys2 {0}
+      run: cargo build --release
+
+    - name: Run tests
+      shell: msys2 {0}
+      run: cargo test --release
+  
   macos-build-test:
     strategy:
       fail-fast: false
