@@ -146,7 +146,7 @@ fn get_linker<'a>(
                 if is_msys2_environment() {
                     "gcc".into()
                 } else {
-                    "ld".into()
+                    "clang".into()
                 }
             });
             Box::new(LdLinker { cmd: Command::new(path), target }) as Box<dyn Linker>
