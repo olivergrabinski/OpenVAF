@@ -1,0 +1,69 @@
+name: Release and Publish to Homebrew Tap
+
+# This action runs on every push to a tag that starts with 'v' (e.g., v1.0.0)
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release-and-publish:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+
+      - name: Get tag version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      # 1. ==================== SETUP & BUILD ====================
+      - name: Set up Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          targets: x86_64-apple-darwin, aarch64-apple-darwin
+        
+      - name: Install pkg-config with Homebrew
+        run: |
+          brew install pkg-config mingw-w64 llvm
+          echo "$(brew --prefix llvm)/bin" >> $GITHUB_PATH
+
+      - name: Build for Intel (x86_64)
+        run: cargo build --release --bin openvaf-r --target x86_64-apple-darwin
+
+      - name: Build for Apple Silicon (aarch64)
+        run: cargo build --release --bin openvaf-r --target aarch64-apple-darwin
+
+      # 2. ==================== PACKAGE BINARIES ====================
+      - name: Create archives for release
+        run: |
+          # Create staging directories
+          mkdir -p staging/openvaf-r-x86_64 staging/openvaf-r-aarch64
+
+          # Copy binaries to staging directories
+          cp target/x86_64-apple-darwin/release/openvaf-r staging/openvaf-r-x86_64/
+          cp target/aarch64-apple-darwin/release/openvaf-r staging/openvaf-r-aarch64/
+
+          # Create tarballs
+          tar -czf openvaf-r-x86_64-apple-darwin.tar.gz -C staging/openvaf-r-x86_64 .
+          tar -czf openvaf-r-aarch64-apple-darwin.tar.gz -C staging/openvaf-r-aarch64 .
+
+      - name: Calculate SHA256 checksums
+        id: shasums
+        run: |
+          echo "SHA256_INTEL=$(shasum -a 256 openvaf-r-x86_64-apple-darwin.tar.gz | awk '{print $1}')" >> $GITHUB_ENV
+          echo "SHA256_ARM=$(shasum -a 256 openvaf-r-aarch64-apple-darwin.tar.gz | awk '{print $1}')" >> $GITHUB_ENV
+
+      # 3. ==================== CREATE GITHUB RELEASE ====================
+      - name: Create GitHub Release
+        id: create_release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            openvaf-r-x86_64-apple-darwin.tar.gz
+            openvaf-r-aarch64-apple-darwin.tar.gz
+          body: "Release for version ${{ env.VERSION }}"
+          draft: false
+          prerelease: false
