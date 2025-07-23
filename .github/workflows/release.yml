@@ -34,7 +34,7 @@ jobs:
           mkdir -p staging/openvaf-r-aarch64
 
           # Copy binaries to staging directories
-          cp target/aarch64-apple-darwin/release/openvaf-r staging/openvaf-r-aarch64/
+          cp target/release/openvaf-r staging/openvaf-r-aarch64/
 
           # Create tarballs
           tar -czf openvaf-r-aarch64-apple-darwin.tar.gz -C staging/openvaf-r-aarch64 .
