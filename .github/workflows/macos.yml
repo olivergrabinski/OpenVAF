@@ -26,8 +26,8 @@ jobs:
 
     - name: Install pkg-config with Homebrew
       run: |
-        brew install pkg-config mingw-w64 sccache llvm@15
-        echo "$(brew --prefix llvm@15)/bin" >> $GITHUB_PATH
+        brew install pkg-config mingw-w64 sccache llvm
+        echo "$(brew --prefix llvm)/bin" >> $GITHUB_PATH
 
     - name: Build
       run: cargo build --release
